@@ -57,6 +57,7 @@ pair<int, BPlusNode*> split_leaf_node(pair<int, BPlusNode*> new_entry, BPlusNode
 	node->entries = overwrite_entries;
 	node_entries.clear();
 	pair<int, BPlusNode*> copy_up_entry = new_leaf->entries[0];
+	copy_up_entry.second = new_leaf;
 	return copy_up_entry;
 }
 
@@ -110,5 +111,7 @@ int main() {
 		cout << root->entries[i].first << " ";
 	}
 	cout << "\n" << copy_up->first << "\n";
+	cout << copy_up->second->entries[0].first << "\n";
+	
 	
 }
