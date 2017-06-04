@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <array>
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -20,7 +21,8 @@ struct BPlusNode {
 	int d;
 	int num_entries;
 	BPlusNode *first_child;
-	pair<int, BPlusNode*> *entries;
+//	pair<int, BPlusNode*> *entries;
+	vector<pair<int, BPlusNode*> > entries;
 	bool is_leaf;
 	
 };
@@ -33,7 +35,7 @@ struct BPlusNode {
 BPlusNode *new_node(int order, bool is_leaf) {
 	BPlusNode *node = new BPlusNode;
 	node->d = order;
-	node->entries = new pair<int, BPlusNode*> [order];
+//	node->entries = new pair<int, BPlusNode*> [order];
 	node->is_leaf = is_leaf;
 	node->num_entries = 0;
 	return node;
@@ -48,16 +50,34 @@ bool entry_comparator(pair<int, BPlusNode*> i, pair<int, BPlusNode*> j) {
 	return i.first < j.first;
 }
 
+//pair<int, BPlusNode*> split_leaf_node(pair<int, BPlusNode*> entry, BPlusNode *node) {
+//	int order = node->d;
+//	BPlusNode *new_leaf = new_node(order, true);
+//	pair<int, BPlusNode*> node_entries = new pair<int, BPlusNode*> [order + 1];
+//	for (int i = 0; i < order; i++) {
+//		node_entries[i] = node->entries[i];
+//	}
+//	node_entries[order]
+//}
+
 pair<int, BPlusNode*> *insert_leaf_entry(pair<int, BPlusNode*> entry, BPlusNode *node) {
 	if (node->num_entries == 2*node->d) {
 		//stuff
 		return &entry;
 	} else {
 		//insert entry as normal
-		node->entries[node->num_entries++] = entry;
-		sort(node->entries, node->entries + node->num_entries, entry_comparator);
+//		node->entries[node->num_entries++] = entry;
+		node->entries.push_back(entry);
+		node->num_entries++;
+//		sort(node->entries, node->entries + node->num_entries, entry_comparator);
+		sort(node->entries.begin(), node->entries.end(), entry_comparator);
 		return nullptr;
 	}
+}
+
+pair<int, BPlusNode*> *insert_inner_entry(pair<int, BPlusNode*> entry, BPlusNode *node) {
+	//stuff
+	return nullptr;
 }
 
 int main() {
@@ -81,12 +101,12 @@ int main() {
 	cout << "\n\n";
 	
 	cout << "number of entries: " << root->num_entries;
-	cout << "\n\n";
+	cout << "\n";
+	cout << "number of entries: " << root->entries.size() << "\n\n";
 	
 	for (int i = 0; i < 2*root->d; i++) {
 		cout << root->entries[i].first << " ";
 	}
 	cout << "\n";
-
 	
 }
